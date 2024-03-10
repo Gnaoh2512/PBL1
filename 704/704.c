@@ -31,11 +31,13 @@ int Xemdiem() {
     char subject[4][10] = {"Triet","Toan","Anh","DSTT"};
     FILE *file;
     int check = 0;
-    char ID[9], line[20], data[6][9];
-    char *token;
-    // check DSSV co ID ko
+    char ID[9], line[MAX_LINE_LENGTH], *token;
+
+    // nhap ID
     printf("nhap ma sinh vien: ");
-    scanf("%s",&ID);
+    scanf("%s",ID);
+
+    // check DSSV co ID ko
     file = fopen("testdata\\DSSV", "r");
     while (fgets(line, MAX_LINE_LENGTH, file) && check == 0) {
         token = strtok(line," ");
@@ -60,19 +62,19 @@ int Xemdiem() {
             perror(path); // bao loi neu ko mo dc file hay ko co file
             return EXIT_FAILURE;
         }
-    
         /* lay tung line 1 */
         while (fgets(line, MAX_LINE_LENGTH, file)) {
-        /* split */
-            char *token = strtok(line, ",");
+            /* split */
+            token = strtok(line, ",");
             if(strcmp(token,ID)) continue;
             // strcmp tra ve 0 neu nhu 2 string = nhau; so sanh ID du lieu va ID nhap vao co bang nhau ko
             printf("%-8s        ",subject[i]);
             // chay qua het string
             while(token != NULL) {
                 token = strtok(NULL,",");
-                (token != NULL)?printf("%-10s      ", token ):printf("\n"); //printing each token
-        }
+                if (token != NULL) printf("%-10s      ",token);
+            }
+            printf("\n");
         break; // lay duoc du lieu roi thi out vong lap
         }
     }
