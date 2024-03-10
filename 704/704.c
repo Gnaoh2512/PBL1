@@ -62,18 +62,16 @@ int Xemdiem() {
         }
     
         /* lay tung line 1 */
-        while (fgets(line, MAX_LINE_LENGTH, file))
-        {
-        
+        while (fgets(line, MAX_LINE_LENGTH, file)) {
         /* split */
-        char *token = strtok(line, ",");
-        if(strcmp(token,ID)) continue;
-        // strcmp tra ve 0 neu nhu 2 string = nhau; so sanh ID du lieu va ID nhap vao co bang nhau ko
-        printf("%-8s        ",subject[i]);
-        // chay qua het string
-        while(token != NULL) {
-            token = strtok(NULL,",");
-            (token != NULL)?printf("%-10s      ", token ):printf("\n"); //printing each token
+            char *token = strtok(line, ",");
+            if(strcmp(token,ID)) continue;
+            // strcmp tra ve 0 neu nhu 2 string = nhau; so sanh ID du lieu va ID nhap vao co bang nhau ko
+            printf("%-8s        ",subject[i]);
+            // chay qua het string
+            while(token != NULL) {
+                token = strtok(NULL,",");
+                (token != NULL)?printf("%-10s      ", token ):printf("\n"); //printing each token
         }
         break; // lay duoc du lieu roi thi out vong lap
         }
@@ -102,6 +100,9 @@ void action() {
 
         // case 5: Indanhsach();
         // break;
+
+        default: clrscr();menu();
+        break;
         }
     }
 }
