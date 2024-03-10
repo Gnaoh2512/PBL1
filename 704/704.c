@@ -85,27 +85,24 @@ int Xemdiem() {
 void action() {
     int input;
     while (1 != 0) {
-    scanf("%d",&input);
-    if (input == 6) {
-    printf("Enter key is typed"); break;
-    }
-    switch (input)
-    {
-    // case 1: Nhapdiem();
-    // break;
+        scanf("%d",&input);
+        if (input == 6) {printf("Enter key is typed"); break;}
+        switch (input) {
+        // case 1: Nhapdiem();
+        // break;
 
-    case 2: Xemdiem();
-    break;
+        case 2: Xemdiem();
+        break;
 
-    // case 3: Suadiem();
-    // break;
+        // case 3: Suadiem();
+        // break;
 
-    // case 4: Sapxep();
-    // break;
+        // case 4: Sapxep();
+        // break;
 
-    // case 5: Indanhsach();
-    // break;
-    }
+        // case 5: Indanhsach();
+        // break;
+        }
     }
 }
 int main() {
