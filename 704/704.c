@@ -14,7 +14,7 @@ void menu() {
     printf("6-Thoat. \n");
 }
 
-void clrscr() {
+void clrscr() { //clear man hinh
     #ifdef _WIN32 
         system("cls");
     #elif (__APPLE__ || __linux__)
@@ -23,7 +23,7 @@ void clrscr() {
 }
 
 
-void refreshcreen() {
+void refreshcreen() { //buffer clear man hinh
     printf("Press anything to continue\n");
     getch();
     clrscr();
