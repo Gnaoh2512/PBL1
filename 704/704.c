@@ -5,14 +5,6 @@
 
 #define MAX_LINE_LENGTH 40
 
-void clrscr() {
-    #ifdef _WIN32 
-        system("cls");
-    #elif (__APPLE__ || __linux__)
-        system("clear");
-    #endif
-}
-
 void menu() {
     printf("1-Nhap diem. \n");
     printf("2-Xem diem. \n");
@@ -21,6 +13,16 @@ void menu() {
     printf("5-In ra danh sach. \n");
     printf("6-Thoat. \n");
 }
+
+void clrscr() {
+    #ifdef _WIN32 
+        system("cls");
+    #elif (__APPLE__ || __linux__)
+        system("clear");
+    #endif
+}
+
+
 void refreshcreen() {
     printf("Press anything to continue\n");
     getch();
@@ -28,7 +30,7 @@ void refreshcreen() {
     menu();
 }
 int Xemdiem() {
-    char subject[4][10] = {"Triet","Toan","Anh","DSTT"};
+    char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     FILE *file;
     int check = 0;
     char ID[9], line[MAX_LINE_LENGTH], *token;
@@ -38,16 +40,13 @@ int Xemdiem() {
     scanf("%s",ID);
 
     // check DSSV co ID ko
-    file = fopen("testdata\\DSSV", "r");
+    file = fopen("testdata\\DSSV.txt", "r");
     while (fgets(line, MAX_LINE_LENGTH, file) && check == 0) {
-        token = strtok(line," ");
+        token = strtok(line,",");
         if (strcmp(token,ID)) continue;
         else {
-            printf("Ho ten: ");
-            while(token != NULL) {
-                token = strtok(NULL," ");
-                if (token != NULL) printf(" %s",token); //printing each token
-            }
+            token = strtok(NULL,",");
+            printf("Ho ten: %s\n",token);
             check = 1;break;
     }}
     if (!check) {printf("Khong tim thay sinh vien\n");refreshcreen(); return 1;}
@@ -72,16 +71,41 @@ int Xemdiem() {
             // chay qua het string
             while(token != NULL) {
                 token = strtok(NULL,",");
-                if (token != NULL) printf("%-10s      ",token);
+                if (token != NULL) {
+                    if ((int) token[1] != 10) printf("%-10s      ",token);
+                    else printf("%c",token[0]);
+                }
             }
             printf("\n");
-        break; // lay duoc du lieu roi thi out vong lap
+            break; // lay duoc du lieu roi thi out vong lap
         }
     }
     fclose(file);
     refreshcreen();
 }
 
+void Indanhsach() {
+    clrscr();
+    char subject[4][10] = {"Triet","Toan","Anh","DSTT"};
+    FILE *file;
+    char ID[9], line[MAX_LINE_LENGTH], *token;
+    file = fopen("testdata\\DSSV.txt", "r");
+    printf("ID  Ho ten                        Anh        DSTT       Toan       Triet\n");
+    while (fgets(line, MAX_LINE_LENGTH, file)) {
+        token = strtok(line,",");
+        printf("%s  ",token);
+        token = strtok(NULL,",");
+        printf("%-30s",token);
+        while(token != NULL) {
+            token = strtok(NULL,",");
+            if (token != NULL) {
+                if ((int) token[1] != 10) printf("%-5s      ",token);
+                else printf("%c",token[0]);
+            }
+        } printf("\n");
+    }
+    refreshcreen();
+}
 void action() {
     int input;
     while (1 != 0) {
@@ -100,8 +124,8 @@ void action() {
         // case 4: Sapxep();
         // break;
 
-        // case 5: Indanhsach();
-        // break;
+        case 5: Indanhsach();
+        break;
 
         default: clrscr();menu();
         break;
