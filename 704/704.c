@@ -331,7 +331,7 @@ int Suadiem() {
     fseek(file1,seekn + 13 + (rep-1)*6,SEEK_SET); // dua con tro SEEK den vi tri can sua
     fputs(NumberAlike(a),file1); // dua du lieu can sua vao
     fclose(file1);
-    refreshcreen();
+    refreshcreen(); 
 }
 
 char *grading(float n) {
