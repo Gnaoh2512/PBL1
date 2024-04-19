@@ -52,12 +52,6 @@ void swap(float *a, float *b) {
   *a = *b;
   *b = t;
 }
-void printArray(float array[][2], int size) {
-  for (int i = 0; i < size; ++i) {
-    printf("%f  %f\n", array[i][0],array[i][1]);
-  }
-  printf("\n");
-}
 int partition(float array[][2], int low, int high) {
   float pivot = array[high][1];
   int i = (low - 1);
@@ -83,10 +77,10 @@ void quickSort(float array[][2], int low, int high) {
 // z = 0 -> in ra cac lua chon in (danh sach sinh vien, danh sach mon hoc)
 // z tu 1 -> 4 -> in ra danh sach mon hoc theo lua chon
 // z = -1 -> in danh sach sinh vien
-void Indanhsach(int z) {
+void Indanhsach(short int z) {
     clrscr();
     FILE *file1;
-    int i;
+    unsigned short int i;
     char ID[3], line1[MAX_LINE_LENGTH], *token1;
     if(z>0) i=2;
     else if (z == -1) i=1;
@@ -105,43 +99,42 @@ void Indanhsach(int z) {
         fclose(file1);
     } else if (i == 2) { // in danh sach mon hoc theo thu tu
         char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
-        int input1;
         if (!z) {
             for (int i = 1; i < 5; i++) {
                 printf("%d.%s   ",i,subject[i-1]);
             }
-            printf("\nChon mon hoc: "); input1 = InOptions(4);
-        } else input1 = z;
+            printf("\nChon mon hoc: "); i = InOptions(4);
+        } else i = z;
         clrscr();
         char path[] = {"testdata\\\\"};
-        strcat(path,subject[input1-1]); // noi strings tao thanh path toi file mon hoc
+        strcat(path,subject[i-1]); // noi strings tao thanh path toi file mon hoc
         strcat(path,".txt");
         FILE *file2;
         char line2[MAX_LINE_LENGTH], *token2;
         file1 = fopen(path, "r");
         fseek(file1,13,SEEK_SET); // bo qua dong 1
         file2 = fopen("testdata\\DSSV.txt", "r");
-        char *str1[MAX_NUMBER_OF_STUDENTS]; int i = 0;
-        while(fgets(line2, MAX_LINE_LENGTH, file2)) { // lay du lieu tu file DSSV (ID,Name) va truyen vao mang str1
-            str1[i] = malloc(strlen(line2) + 1);
+        char *str[MAX_NUMBER_OF_STUDENTS]; unsigned short int i = 0;
+        while(fgets(line2, MAX_LINE_LENGTH, file2)) { // lay du lieu tu file DSSV (ID,Name) va truyen vao mang str
+            str[i] = malloc(strlen(line2) + 1);
             line2[33] = '\0';
-            strcpy(str1[i], line2);
+            strcpy(str[i], line2);
             i++;
         }
         int k = i;i--;
         char *c, line1copy[MAX_LINE_LENGTH];
         printf("ID  Ho ten                        Labs                         Exercises                    Diligence     Mid-term      Final         Average\n");
         while (fgets(line1, MAX_LINE_LENGTH, file1)) {
-            int check = 0;
+            unsigned short int check = 0;
             strcpy(line1copy,line1); // tao copy de tranh huy hoai du lieu cua line1 
             token1 = strtok(line1,",");
             for (int pos = 0; pos <= i; pos++) { // lay ID tu file mon hoc va compare voi ID trong danh sach sinh vien
-                strcpy(line2,str1[pos]); // sau khi compare xong thi chuyen sinh vien vua duoc compare xuong duoi
+                strcpy(line2,str[pos]); // sau khi compare xong thi chuyen sinh vien vua duoc compare xuong duoi
                 token2 = strtok(line2,","); // va chuyen sinh vien truoc sinh vien duoc chuyen len tren
                 if (strcmp(token1,token2)) continue;
-                c = str1[pos];
-                str1[pos] = str1[i];
-                str1[i] = c;
+                c = str[pos];
+                str[pos] = str[i];
+                str[i] = c;
                 i--;
                 check = 1;
                 break;
@@ -158,7 +151,7 @@ void Indanhsach(int z) {
             } printf("\n");
         }
         for (int i = 0; i < k; i++) {
-            free(str1[i]);
+            free(str[i]);
         }
     }
     if (!z) refreshcreen();
@@ -167,7 +160,7 @@ void Indanhsach(int z) {
 int Xemdiem() {
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     FILE *file;
-    int check = 0;
+    unsigned short int check = 0;
     char ID[9], line[MAX_LINE_LENGTH], *token;
     char test[20];
     
@@ -219,7 +212,7 @@ int Xemdiem() {
 
 int ChinhHeSo() {
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
-    int input;
+    unsigned short int input;
     for (int i = 1; i < 5; i++) {
         printf("%d.%s   ",i,subject[i-1]);
     } printf("\n");
@@ -239,9 +232,11 @@ int ChinhHeSo() {
     if (strlen(str) < 11) {printf("Khong hop le\n");refreshcreen();return 1;}
     fseek(file,0,SEEK_SET);
     fputs(str,file);
+    printf("Da sua diem thanh cong\n");
+    refreshcreen();
 }
 int Nhapdiem() {
-    int input1;
+    unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     for (int i = 1; i < 5; i++) {
@@ -256,7 +251,7 @@ int Nhapdiem() {
     // in ra danh sach va diem cua mon hoc
     Indanhsach(input1);
     // check ID sinh vien co ton tai ko
-    char ID[9]; int check = 0;
+    char ID[9]; unsigned short int check = 0;
     printf("nhap ma sinh vien: ");scanf("%s",ID);
     file1 = fopen(path, "r");
     while (fgets(line1, MAX_LINE_LENGTH, file1) && check == 0) {
@@ -299,7 +294,7 @@ int Nhapdiem() {
 }
 
 int Suadiem() {
-    int input1;
+    unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     for (int i = 1; i < 5; i++) {
@@ -316,7 +311,7 @@ int Suadiem() {
     // check ID sinh vien co ton tai hay ko
     char ID[9];
     printf("nhap ma sinh vien: ");scanf("%s",ID);
-    int check = 0;
+    unsigned short int check = 0;
     file1 = fopen(path,"r");
     fgets(line1, MAX_LINE_LENGTH, file1);
     while (fgets(line1, MAX_LINE_LENGTH, file1) && check == 0) {
@@ -332,7 +327,7 @@ int Suadiem() {
         printf("%d.%s   ",i,marks[i-1]); // in ra cac lua chon mon hoc
     }
 
-    int input2;
+    unsigned short int input2;
     printf("\nCot diem can sua: "); input2 = InOptions(5); // lay cot diem can sua
 
     int pointed = -input2, seekn = 0, locate = 0, rep; float a;
@@ -446,8 +441,8 @@ void Sapxep() {
 }
 
 void action() {
-    int input;
-    while (1 != 0) {
+    unsigned int input;
+    while (1) {
         scanf("%d",&input);
         if (input == 7) {printf("Enter key is typed"); break;}
         switch (input) {
