@@ -33,9 +33,9 @@ int InOptions(int n) { // ngan chan input nguoi dung neu nhu ko co trong lua cho
 }
 
 char *NumberAlike(float a) { // bien diem nhap vao thanh string dang xx.xx
+    a = ceilf(a * 100) / 100;
     if (a >= 10) return "10.00";
     if (a <= 0) return "00.00";
-    a = ceilf(a * 100) / 100;
     char c[7];
     char * score = (char *)malloc(10 * sizeof(char));
     score[0] = '\0';
@@ -210,28 +210,41 @@ int Xemdiem() {
     refreshcreen();
 }
 
+void Heso(char *str) {
+    char hs[10];
+    while (1) {
+        scanf("%s",hs);
+        int num = atoi(hs);
+        if (num < 10 || num > 99) {
+            printf("He so phai nam trong 10 -> 99\n");
+            continue;
+        }
+        strcat(str,hs);break;
+    }
+}
+
 int ChinhHeSo() {
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     unsigned short int input;
     for (int i = 1; i < 5; i++) {
         printf("%d.%s   ",i,subject[i-1]);
     } printf("\n");
-    printf("Chon mon hoc muon chinh sua he so cac cot diem\n"); scanf("%d",&input);
+    printf("Chon mon hoc muon chinh sua he so cac cot diem\n"); scanf("%hu",&input);
     FILE *file;
     char path[] = "testdata\\\\";
     strcat(path,subject[input-1]); // noi strings tao thanh path den file mon hoc
     strcat(path,".txt");
     file = fopen(path, "r+");
-    char hs[2];
-    char *str = (char *)malloc(11 * sizeof(char));
+    char str[11] = "";
     printf("Vui long nhap cac he so theo %% (vi du: 10,20,30,...) va xem xet tong cac he so = 100\n");
-    printf("He so Labs, Exercises: ");scanf("%s",&hs);strcat(str,hs);strcat(str,",");
-    printf("He so Diligence: ");scanf("%s",&hs);strcat(str,hs);strcat(str,",");
-    printf("He so Midterm: ");scanf("%s",&hs);strcat(str,hs);strcat(str,",");
-    printf("He so Final: ");scanf("%s",&hs);strcat(str,hs);
-    if (strlen(str) < 11) {printf("Khong hop le\n");refreshcreen();return 1;}
+    printf("He so Labs, Exercises: ");Heso(str);strcat(str,",");
+    printf("He so Diligence: ");Heso(str);strcat(str,",");
+    printf("He so Midterm: ");Heso(str);strcat(str,",");
+    printf("He so Final: ");Heso(str);
     fseek(file,0,SEEK_SET);
+    printf("%s",str);
     fputs(str,file);
+    fclose(file);
     printf("Da sua diem thanh cong\n");
     refreshcreen();
 }
@@ -437,6 +450,7 @@ void Sapxep() {
                 free(str1[i][j]);
             }
         }
+        fclose(file);
     }printf("Sap xep thanh cong\n");refreshcreen();
 }
 
