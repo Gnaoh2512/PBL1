@@ -28,11 +28,16 @@ float random_float(float min, float max) {
 void generate_line(FILE *file, int number) {
     // Generate sequences of hours for group 1 and group 2
     char group1_hours[50], group2_hours[50];
-    sprintf(group1_hours, "%s %s %s %s",
-            NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
-    sprintf(group2_hours, "%s %s %s %s",
-            NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
-    
+    float ran1 = random_float(0,10);
+    float ran2 = random_float(0,10);
+    if (ran1 < 2.5) sprintf(group1_hours, "%s                  ",NumberAlike(random_float(0,10)));
+    else if (ran1 >= 2.5 && ran1 < 5) sprintf(group1_hours, "%s %s            ",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    else if (ran1 >= 5 && ran1 < 7.5) sprintf(group1_hours, "%s %s %s      ",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    else if (ran1 >= 7.5) sprintf(group1_hours, "%s %s %s %s",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    if (ran2 < 2.5) sprintf(group2_hours, "%s %s %s %s",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    else if (ran2 >= 2.5 && ran2 < 5) sprintf(group2_hours, "%s %s %s      ",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    else if (ran2 >= 5 && ran2 < 7.5) sprintf(group2_hours, "%s %s            ",NumberAlike(random_float(0,10)), NumberAlike(random_float(0,10)));
+    else if (ran2 >= 7.5) sprintf(group2_hours, "%s                  ",NumberAlike(random_float(0,10)));
     char str[3] = "",temp[3]; 
     if (number < 10) strcat(str,"0");
     // Using sprintf to convert int to string
@@ -42,8 +47,8 @@ void generate_line(FILE *file, int number) {
 }
 
 int main() {
-    int start_number = 1;
-    int end_number = 40;
+    int start_number = 10;
+    int end_number = 50;
     
     // Open a file for writing
     FILE *output_file = fopen("output.txt", "w");
@@ -55,6 +60,8 @@ int main() {
     // Seed the random number generator with current time
     srand(time(NULL));
     
+    // add Heso
+    fprintf(output_file, "10,20,20,50\n");
     // Generate lines for numbers 41 to 90 and write them to the file
     for (int num = start_number; num <= end_number; num++) {
         generate_line(output_file, num);

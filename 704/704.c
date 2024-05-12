@@ -28,8 +28,14 @@ void refreshcreen() { //buffer clear man hinh
 
 int InOptions(int n) { // ngan chan input nguoi dung neu nhu ko co trong lua chon
     int input;scanf("%d",&input);
-    while (input < 1 || input > n) {printf("khong co trong cac lua chon | nhap lai lua chon: ");scanf("%d",&input);}
+    while (input < 1 || input > n) {printf("Khong co trong cac lua chon | Nhap lai lua chon: ");scanf("%d",&input);}
     return input;
+}
+
+float InScore(float a) {
+    while (a < 0 || a > 10) {
+        printf("Diem phai nam tu 0 -> 10 | Nhap lai diem: ");scanf("%f",&a);
+    } return a;
 }
 
 char *NumberAlike(float a) { // bien diem nhap vao thanh string dang xx.xx
@@ -210,7 +216,7 @@ int Xemdiem() {
     refreshcreen();
 }
 
-void Heso(char *str) {
+void Heso(char *str,int *sum) {
     char hs[10];
     while (1) {
         scanf("%s",hs);
@@ -219,6 +225,7 @@ void Heso(char *str) {
             printf("He so phai nam trong 10 -> 99\n");
             continue;
         }
+        *sum += num;
         strcat(str,hs);break;
     }
 }
@@ -235,15 +242,21 @@ int ChinhHeSo() {
     strcat(path,subject[input-1]); // noi strings tao thanh path den file mon hoc
     strcat(path,".txt");
     file = fopen(path, "r+");
-    char str[11] = "";
-    printf("Vui long nhap cac he so theo %% (vi du: 10,20,30,...) va xem xet tong cac he so = 100\n");
-    printf("He so Labs, Exercises: ");Heso(str);strcat(str,",");
-    printf("He so Diligence: ");Heso(str);strcat(str,",");
-    printf("He so Midterm: ");Heso(str);strcat(str,",");
-    printf("He so Final: ");Heso(str);
+    char output[11] = ""; int sum;
+    while (1) {
+        sum = 0;
+        printf("Vui long nhap cac he so theo %% (vi du: 10,20,30,...) va xem xet tong cac he so = 100\n");
+        printf("He so Labs, Exercises: ");Heso(output,&sum);strcat(output,",");
+        printf("He so Diligence: ");Heso(output,&sum);strcat(output,",");
+        printf("He so Midterm: ");Heso(output,&sum);strcat(output,",");
+        printf("He so Final: ");Heso(output,&sum);
+        if (sum != 100) printf("Khong phu hop voi quy dinh\n"); else break;
+        for (int i = 0; i < 11; i++) {
+            output[i] = '\0';
+        }
+    }
     fseek(file,0,SEEK_SET);
-    printf("%s",str);
-    fputs(str,file);
+    fputs(output,file);
     fclose(file);
     printf("Da sua diem thanh cong\n");
     refreshcreen();
@@ -299,9 +312,10 @@ int Nhapdiem() {
     }
     seekn +=limit*6; // lay vi tri can nhap diem
     float a;
-    printf("Type score you want to add in %s: ",marks[input2-1]);scanf("%f",&a); // lay diem nhap vao
+    printf("Type score you want to add in %s: ",marks[input2-1]);scanf("%f",&a);a = InScore(a); // lay diem nhap vao
     fseek(file1,seekn + 13,SEEK_SET); // dua con tro SEEK den vi tri can nhap diem
     fputs(NumberAlike(a),file1);
+    printf("Nhap diem thanh cong\n");
     fclose(file1);
     refreshcreen();
 }
@@ -363,7 +377,7 @@ int Suadiem() {
         }
         printf("\nType score you want to replace: "); rep = InOptions(locate); // lay diem thay the
     } else rep = 1; // Diligence,Midterm,Final ko can in nhieu lua chon
-    printf("Replace score with: ");scanf("%f",&a); // lay diem thay the
+    printf("Replace score with: ");scanf("%f",&a);a = InScore(a); // lay diem thay the
     fseek(file1,seekn + 13 + (rep-1)*6,SEEK_SET); // dua con tro SEEK den vi tri can sua
     fputs(NumberAlike(a),file1); // dua du lieu can sua vao
     fclose(file1);
@@ -373,7 +387,7 @@ int Suadiem() {
 char *grading(float n) { // chuyen diem he 10 sang diem chu
     if (n < 4) return "F";
     char *grade[4] = {"D","C","B","A"};
-    return grade[(int) ((n - 4)/1.5)];
+    return grade[(int) ((n - 4)/1.5 + 0.01)];
 }
 
 void Sapxep() {
@@ -451,7 +465,7 @@ void Sapxep() {
             }
         }
         fclose(file);
-    }printf("Sap xep thanh cong\n");refreshcreen();
+    } printf("Sap xep thanh cong\n");refreshcreen();
 }
 
 void action() {
