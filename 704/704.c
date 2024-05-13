@@ -27,8 +27,12 @@ void refreshcreen() { //buffer clear man hinh
 }
 
 int InOptions(int n) { // ngan chan input nguoi dung neu nhu ko co trong lua chon
-    int input;scanf("%d",&input);
-    while (input < 1 || input > n) {printf("Option does not exist | Select again: ");scanf("%d",&input);}
+    int input;
+    while (1) {
+        scanf("%d",&input);
+        if (input > 0 && input <= n) break;
+        printf("Option does not exist | Select again: ");
+        }
     return input;
 }
 
@@ -91,6 +95,7 @@ void Indanhsach(short int z) {
     if(z>0) i=2;
     else if (z == -1) i=1;
     else {printf("Select list\n1.Student list    2.Subject list\n");i = InOptions(2);}
+    clrscr();
     if(i == 1) { // in danh sach sinh vien
         file1 = fopen("testdata\\DSSV.txt", "r");
         printf("ID  Name\n");
@@ -231,12 +236,13 @@ void Heso(char *str,int *sum) {
 }
 
 int ChinhHeSo() {
+    clrscr();
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     unsigned short int input;
     for (int i = 0; i < 4; i++) {
-        printf("%d.%s   ",i,subject[i-1]);
+        printf("%d.%s   ",i+1,subject[i]);
     } printf("\n");
-    printf("Select subject: \n"); scanf("%hu",&input);
+    printf("Select subject: "); input = InOptions(4);
     FILE *file;
     char path[] = "testdata\\\\";
     strcat(path,subject[input-1]); // noi strings tao thanh path den file mon hoc
@@ -262,6 +268,7 @@ int ChinhHeSo() {
     refreshcreen();
 }
 int Nhapdiem() {
+    clrscr();
     unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
@@ -321,6 +328,7 @@ int Nhapdiem() {
 }
 
 int Suadiem() {
+    clrscr();
     unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
@@ -469,7 +477,7 @@ void Sapxep() {
 }
 
 void action() {
-    unsigned int input;
+    int input;
     while (1) {
         scanf("%d",&input);
         if (input == 7) {printf("Exit successfully"); break;}
@@ -492,7 +500,7 @@ void action() {
         case 6: ChinhHeSo();
         break;
 
-        default: clrscr();menu();
+        default: printf("Option does not exist | press anything to continue");getch();clrscr();menu();break;
         break;
         }
     }
