@@ -8,7 +8,7 @@
 #define MAX_NUMBER_OF_STUDENTS 60
 
 void menu() {
-    printf("1-Nhap diem. \n2-Xem diem. \n3-Sua diem. \n4-Sap xep. \n5-In ra danh sach. \n6-Chinh sua he so diem mon hoc. \n7-Thoat.\n");
+    printf("1-Nhap diem. \n2-Xem diem. \n3-Sua diem. \n4-Sap xep. \n5-In ra danh sach. \n6-Chinh sua he so diem mon hoc. \n7-Thoat.\nSelect option: ");
 }
 
 void clrscr() { //clear man hinh
@@ -28,13 +28,13 @@ void refreshcreen() { //buffer clear man hinh
 
 int InOptions(int n) { // ngan chan input nguoi dung neu nhu ko co trong lua chon
     int input;scanf("%d",&input);
-    while (input < 1 || input > n) {printf("Khong co trong cac lua chon | Nhap lai lua chon: ");scanf("%d",&input);}
+    while (input < 1 || input > n) {printf("Option does not exist | Select again: ");scanf("%d",&input);}
     return input;
 }
 
 float InScore(float a) {
     while (a < 0 || a > 10) {
-        printf("Diem phai nam tu 0 -> 10 | Nhap lai diem: ");scanf("%f",&a);
+        printf("Score must be in range of 0 -> 10 | Type again: ");scanf("%f",&a);
     } return a;
 }
 
@@ -90,10 +90,10 @@ void Indanhsach(short int z) {
     char ID[3], line1[MAX_LINE_LENGTH], *token1;
     if(z>0) i=2;
     else if (z == -1) i=1;
-    else {printf("Danh sach can xem\n1.Danh sach sinh vien    2.Danh sach mon hoc\n");i = InOptions(2);}
+    else {printf("Select list\n1.Student list    2.Subject list\n");i = InOptions(2);}
     if(i == 1) { // in danh sach sinh vien
         file1 = fopen("testdata\\DSSV.txt", "r");
-        printf("ID  Ho ten\n");
+        printf("ID  Name\n");
         while (fgets(line1, MAX_LINE_LENGTH, file1)) {
             token1 = strtok(line1,",");
             printf("%s  ",token1); 
@@ -106,10 +106,10 @@ void Indanhsach(short int z) {
     } else if (i == 2) { // in danh sach mon hoc theo thu tu
         char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
         if (!z) {
-            for (int i = 1; i < 5; i++) {
-                printf("%d.%s   ",i,subject[i-1]);
+            for (int i = 0; i < 4; i++) {
+                printf("%d.%s   ",i+1,subject[i]);
             }
-            printf("\nChon mon hoc: "); i = InOptions(4);
+            printf("\nSelect subject: "); i = InOptions(4);
         } else i = z;
         clrscr();
         char path[] = {"testdata\\\\"};
@@ -129,7 +129,7 @@ void Indanhsach(short int z) {
         }
         int k = i;i--;
         char *c, line1copy[MAX_LINE_LENGTH];
-        printf("ID  Ho ten                        Labs                         Exercises                    Diligence     Mid-term      Final         Average\n");
+        printf("ID  Name                          Labs                         Exercises                    Diligence     Mid-term      Final         Average\n");
         while (fgets(line1, MAX_LINE_LENGTH, file1)) {
             unsigned short int check = 0;
             strcpy(line1copy,line1); // tao copy de tranh huy hoai du lieu cua line1 
@@ -172,7 +172,7 @@ int Xemdiem() {
     
     Indanhsach(-1);
     // nhap ID
-    printf("nhap ma sinh vien: ");scanf("%s",ID);
+    printf("Type in ID: ");scanf("%s",ID);
 
     // check DSSV co ID ko
     file = fopen("testdata\\DSSV.txt", "r");
@@ -181,10 +181,10 @@ int Xemdiem() {
         if (strcmp(token,ID)) continue;
         else {
             token = strtok(NULL,",");
-            printf("Ho ten: %s",token);
+            printf("Full Name: %s",token);
             check = 1;break;
     }}
-    if (!check) {printf("Khong tim thay sinh vien\n");refreshcreen(); return 1;}
+    if (!check) {printf("ID does not exist\n");refreshcreen(); return 1;}
     
     // print thong tin
     printf("Subjects        Labs                         Exercises                    Diligence    Mid-term     Final        Average\n");
@@ -222,7 +222,7 @@ void Heso(char *str,int *sum) {
         scanf("%s",hs);
         int num = atoi(hs);
         if (num < 10 || num > 99) {
-            printf("He so phai nam trong 10 -> 99\n");
+            printf("He so must be in range from 10 -> 99\n");
             continue;
         }
         *sum += num;
@@ -233,10 +233,10 @@ void Heso(char *str,int *sum) {
 int ChinhHeSo() {
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     unsigned short int input;
-    for (int i = 1; i < 5; i++) {
+    for (int i = 0; i < 4; i++) {
         printf("%d.%s   ",i,subject[i-1]);
     } printf("\n");
-    printf("Chon mon hoc muon chinh sua he so cac cot diem\n"); scanf("%hu",&input);
+    printf("Select subject: \n"); scanf("%hu",&input);
     FILE *file;
     char path[] = "testdata\\\\";
     strcat(path,subject[input-1]); // noi strings tao thanh path den file mon hoc
@@ -250,7 +250,7 @@ int ChinhHeSo() {
         printf("He so Diligence: ");Heso(output,&sum);strcat(output,",");
         printf("He so Midterm: ");Heso(output,&sum);strcat(output,",");
         printf("He so Final: ");Heso(output,&sum);
-        if (sum != 100) printf("Khong phu hop voi quy dinh\n"); else break;
+        if (sum != 100) printf("Not in regulations\n"); else break;
         for (int i = 0; i < 11; i++) {
             output[i] = '\0';
         }
@@ -258,17 +258,17 @@ int ChinhHeSo() {
     fseek(file,0,SEEK_SET);
     fputs(output,file);
     fclose(file);
-    printf("Da sua diem thanh cong\n");
+    printf("Sua diem thanh cong\n");
     refreshcreen();
 }
 int Nhapdiem() {
     unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
-    for (int i = 1; i < 5; i++) {
-        printf("%d.%s   ",i,subject[i-1]);
+    for (int i = 0; i < 4; i++) {
+        printf("%d.%s   ",i+1,subject[i]);
     }
-    printf("\nChon mon hoc: "); input1 = InOptions(4);
+    printf("\nSelect subject: "); input1 = InOptions(4);
     clrscr();
     char path[] = {"testdata\\\\"};
     strcat(path,subject[input1-1]); // noi strings tao thanh path toi file mon hoc
@@ -278,7 +278,7 @@ int Nhapdiem() {
     Indanhsach(input1);
     // check ID sinh vien co ton tai ko
     char ID[9]; unsigned short int check = 0;
-    printf("nhap ma sinh vien: ");scanf("%s",ID);
+    printf("Type in ID: ");scanf("%s",ID);
     file1 = fopen(path, "r");
     while (fgets(line1, MAX_LINE_LENGTH, file1) && check == 0) {
         token1 = strtok(line1,",");
@@ -294,7 +294,7 @@ int Nhapdiem() {
     }
 
     int input2;
-    printf("\nCot diem can nhap: "); input2 = InOptions(5);
+    printf("\nSelect scores section: "); input2 = InOptions(5);
 
     // tim vi tri can sua diem 
     int pointed = -input2, seekn = 0, limit = 0;
@@ -324,10 +324,10 @@ int Suadiem() {
     unsigned short int input1;
     char line2[MAX_LINE_LENGTH],line1[MAX_LINE_LENGTH],*token1,*token2;
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
-    for (int i = 1; i < 5; i++) {
-        printf("%d.%s   ",i,subject[i-1]);
+    for (int i = 0; i < 4; i++) {
+        printf("%d.%s   ",i+1,subject[i]);
     }
-    printf("\nChon mon hoc: "); input1 = InOptions(4);
+    printf("\nSelect subject: "); input1 = InOptions(4);
     clrscr();
     char path[] = {"testdata\\\\"};
     strcat(path,subject[input1-1]); // noi strings tao path den mon hoc
@@ -337,7 +337,7 @@ int Suadiem() {
     Indanhsach(input1);
     // check ID sinh vien co ton tai hay ko
     char ID[9];
-    printf("nhap ma sinh vien: ");scanf("%s",ID);
+    printf("Type in ID: ");scanf("%s",ID);
     unsigned short int check = 0;
     file1 = fopen(path,"r");
     fgets(line1, MAX_LINE_LENGTH, file1);
@@ -346,7 +346,7 @@ int Suadiem() {
         if (strcmp(token1,ID)) continue;
         check = 1;break;
     }
-    if (!check) {printf("Khong tim thay sinh vien trong nganh hoc nay hoac ID khong ton tai\n");refreshcreen(); return 1;}
+    if (!check) {printf("ID does not exist\n");refreshcreen(); return 1;}
     fclose(file1);
 
     char marks[5][20] = {"Labs","Exercises","Diligence","Mid-term","Final"};
@@ -355,7 +355,7 @@ int Suadiem() {
     }
 
     unsigned short int input2;
-    printf("\nCot diem can sua: "); input2 = InOptions(5); // lay cot diem can sua
+    printf("\nSelect scores section: "); input2 = InOptions(5); // lay cot diem can sua
 
     int pointed = -input2, seekn = 0, locate = 0, rep; float a;
     file1 = fopen(path,"r+");
@@ -371,11 +371,11 @@ int Suadiem() {
         for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) locate++; // coi co bao nhieu diem trong cot
         token1 = strtok(token1," ");
         printf("1. %s   ",token1); // in ra cac diem
-        for (int i = 1; i < locate; i++) { // cho nay de fix bug
+        for (int i = 1; i < locate; i++) {
             token1 = strtok(NULL," ");
             printf("%d. %s      ",i+1,token1);
         }
-        printf("\nType score you want to replace: "); rep = InOptions(locate); // lay diem thay the
+        printf("\nSelect score you want to replace: "); rep = InOptions(locate); // lay diem thay the
     } else rep = 1; // Diligence,Midterm,Final ko can in nhieu lua chon
     printf("Replace score with: ");scanf("%f",&a);a = InScore(a); // lay diem thay the
     fseek(file1,seekn + 13 + (rep-1)*6,SEEK_SET); // dua con tro SEEK den vi tri can sua
@@ -465,14 +465,14 @@ void Sapxep() {
             }
         }
         fclose(file);
-    } printf("Sap xep thanh cong\n");refreshcreen();
+    } clrscr();printf("Sap xep thanh cong\n");refreshcreen();
 }
 
 void action() {
     unsigned int input;
     while (1) {
         scanf("%d",&input);
-        if (input == 7) {printf("Enter key is typed"); break;}
+        if (input == 7) {printf("Exit successfully"); break;}
         switch (input) {
         case 1: Nhapdiem();
         break;
