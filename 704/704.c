@@ -94,7 +94,7 @@ void Indanhsach(short int z) {
     char ID[3], line1[MAX_LINE_LENGTH], *token1;
     if(z>0) i=2;
     else if (z == -1) i=1;
-    else {printf("Select list\n1.Student list    2.Subject list\n");i = InOptions(2);}
+    else {printf("1.Student list    2.Subject list\nSelect list: ");i = InOptions(2);}
     clrscr();
     if(i == 1) { // in danh sach sinh vien
         file1 = fopen("testdata\\DSSV.txt", "r");
@@ -178,6 +178,7 @@ int Xemdiem() {
     Indanhsach(-1);
     // nhap ID
     printf("Type in ID: ");scanf("%s",ID);
+    clrscr();
 
     // check DSSV co ID ko
     file = fopen("testdata\\DSSV.txt", "r");
@@ -256,7 +257,7 @@ int ChinhHeSo() {
         printf("He so Diligence: ");Heso(output,&sum);strcat(output,",");
         printf("He so Midterm: ");Heso(output,&sum);strcat(output,",");
         printf("He so Final: ");Heso(output,&sum);
-        if (sum != 100) printf("Not in regulations\n"); else break;
+        if (sum != 100) {printf("Not in regulations | press anything to continue \n");getch();clrscr();} else break;
         for (int i = 0; i < 11; i++) {
             output[i] = '\0';
         }
