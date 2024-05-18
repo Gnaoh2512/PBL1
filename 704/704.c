@@ -226,7 +226,7 @@ void Heso(char *str,int *sum) {
     char hs[10];
     while (1) {
         scanf("%s",hs);
-        int num = atoi(hs);
+        int num = strtof(hs,NULL);
         if (num < 10 || num > 99) {
             printf("He so must be in range from 10 -> 99\n");
             continue;
@@ -315,13 +315,12 @@ int Nhapdiem() {
         for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
         for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) limit++; // xem thu cot diem do da nhap het hay chua
         if ((limit == 4 && input2 < 3) || (limit == 1 && input2 >= 3))
-        {printf("Reached limited number of scores\nChange scores in SuaDiem\n");refreshcreen();return 0;}
+        {printf("Reached limited number of scores | Change scores in Sua diem\n");refreshcreen();return 0;}
         break;
     }
-    seekn +=limit*6; // lay vi tri can nhap diem
     float a;
     printf("Type score you want to add in %s: ",marks[input2-1]);scanf("%f",&a);a = InScore(a); // lay diem nhap vao
-    fseek(file1,seekn + 13,SEEK_SET); // dua con tro SEEK den vi tri can nhap diem
+    fseek(file1,seekn + 13 + limit*6,SEEK_SET); // dua con tro SEEK den vi tri can nhap diem
     fputs(NumberAlike(a),file1);
     printf("Nhap diem thanh cong\n");
     fclose(file1);
@@ -376,15 +375,16 @@ int Suadiem() {
         for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
         break;
     }
+    for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) locate++; // coi co bao nhieu diem trong cot
+    if (locate == 0) {printf("There're no scores to change | Add score in Nhap diem\n");refreshcreen();return 0;}
     if (input2 < 3) { // Labs,Exercises can lua chon diem can sua
-        for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) locate++; // coi co bao nhieu diem trong cot
         token1 = strtok(token1," ");
         printf("1. %s   ",token1); // in ra cac diem
         for (int i = 1; i < locate; i++) {
             token1 = strtok(NULL," ");
             printf("%d. %s      ",i+1,token1);
         }
-        printf("\nSelect score you want to replace: "); rep = InOptions(locate); // lay diem thay the
+        printf("\nSelect score you want to change: "); rep = InOptions(locate); // lay diem thay the
     } else rep = 1; // Diligence,Midterm,Final ko can in nhieu lua chon
     printf("Replace score with: ");scanf("%f",&a);a = InScore(a); // lay diem thay the
     fseek(file1,seekn + 13 + (rep-1)*6,SEEK_SET); // dua con tro SEEK den vi tri can sua
@@ -394,8 +394,8 @@ int Suadiem() {
 }
 
 char *grading(float n) { // chuyen diem he 10 sang diem chu
-    if (n < 4) return "F";
-    char *grade[4] = {"D","C","B","A"};
+    if (n < 4) return "(F)";
+    char *grade[4] = {"(D)","(C)","(B)","(A)"};
     return grade[(int) ((n - 4)/1.5 + 0.01)];
 }
 
@@ -462,9 +462,7 @@ void Sapxep() {
             char out[76] = "";
             for(int f = 0; f < 6; f++) {strcat(out,str1[(int) sor[l][0]][f]);strcat(out,",");}
             strcat(out,NumberAlike(sor[l][1]));
-            strcat(out,"(");
             strcat(out,grading(sor[l][1])); // optimizable ?
-            strcat(out,")");
             strcat(out,"\n");
             fputs(out,file);
         }
