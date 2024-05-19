@@ -252,15 +252,13 @@ int ChinhHeSo() {
     char output[11] = ""; int sum;
     while (1) {
         sum = 0;
+        strcpy(output,"");
         printf("Vui long nhap cac he so theo %% (vi du: 10,20,30,...) va xem xet tong cac he so = 100\n");
         printf("He so Labs, Exercises: ");Heso(output,&sum);strcat(output,",");
         printf("He so Diligence: ");Heso(output,&sum);strcat(output,",");
         printf("He so Midterm: ");Heso(output,&sum);strcat(output,",");
         printf("He so Final: ");Heso(output,&sum);
         if (sum != 100) {printf("Not in regulations | press anything to continue \n");getch();clrscr();} else break;
-        for (int i = 0; i < 11; i++) {
-            output[i] = '\0';
-        }
     }
     fseek(file,0,SEEK_SET);
     fputs(output,file);
@@ -472,12 +470,13 @@ void Sapxep() {
             }
         }
         fclose(file);
-    } clrscr();printf("Sap xep thanh cong\n");refreshcreen();
+    }
 }
 
 void action() {
     int input;
     while (1) {
+        Sapxep();
         scanf("%d",&input);
         if (input == 7) {printf("Exit successfully"); break;}
         switch (input) {
@@ -490,7 +489,7 @@ void action() {
         case 3: Suadiem();
         break;
 
-        case 4: Sapxep();
+        case 4: Sapxep();clrscr();printf("Sap xep thanh cong\n");refreshcreen();
         break;
 
         case 5: Indanhsach(0);
