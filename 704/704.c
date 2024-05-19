@@ -87,7 +87,7 @@ void quickSort(float array[][2], int low, int high) {
 // z = 0 -> in ra cac lua chon in (danh sach sinh vien, danh sach mon hoc)
 // z tu 1 -> 4 -> in ra danh sach mon hoc theo lua chon
 // z = -1 -> in danh sach sinh vien
-void Indanhsach(short int z) {
+int Indanhsach(short int z) {
     clrscr();
     FILE *file1;
     unsigned short int i;
@@ -98,6 +98,7 @@ void Indanhsach(short int z) {
     clrscr();
     if(i == 1) { // in danh sach sinh vien
         file1 = fopen("testdata\\DSSV.txt", "r");
+        if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         printf("ID  Name\n");
         while (fgets(line1, MAX_LINE_LENGTH, file1)) {
             token1 = strtok(line1,",");
@@ -123,8 +124,10 @@ void Indanhsach(short int z) {
         FILE *file2;
         char line2[MAX_LINE_LENGTH], *token2;
         file1 = fopen(path, "r");
+        if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         fseek(file1,13,SEEK_SET); // bo qua dong 1
         file2 = fopen("testdata\\DSSV.txt", "r");
+        if (file2 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         char *str[MAX_NUMBER_OF_STUDENTS]; unsigned short int i = 0;
         while(fgets(line2, MAX_LINE_LENGTH, file2)) { // lay du lieu tu file DSSV (ID,Name) va truyen vao mang str
             str[i] = malloc(strlen(line2) + 1);
@@ -182,6 +185,7 @@ int Xemdiem() {
 
     // check DSSV co ID ko
     file = fopen("testdata\\DSSV.txt", "r");
+    if (file == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     while (fgets(line, MAX_LINE_LENGTH, file) && check == 0) {
         token = strtok(line,",");
         if (strcmp(token,ID)) continue;
@@ -199,6 +203,7 @@ int Xemdiem() {
         strcat(path,subject[i]); // noi strings tao thanh path den file mon hoc
         strcat(path,".txt");
         file = fopen(path, "r");
+        if (file == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         fgets(line, MAX_LINE_LENGTH, file); // bo qua dong 1
         while (fgets(line, MAX_LINE_LENGTH, file)) {
             token = strtok(line, ",");
@@ -249,6 +254,7 @@ int ChinhHeSo() {
     strcat(path,subject[input-1]); // noi strings tao thanh path den file mon hoc
     strcat(path,".txt");
     file = fopen(path, "r+");
+    if (file == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     char output[11] = ""; int sum;
     while (1) {
         sum = 0;
@@ -286,12 +292,13 @@ int Nhapdiem() {
     char ID[9]; unsigned short int check = 0;
     printf("Type in ID: ");scanf("%s",ID);
     file1 = fopen(path, "r");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     while (fgets(line1, MAX_LINE_LENGTH, file1) && check == 0) {
         token1 = strtok(line1,",");
         if (strcmp(token1,ID)) continue;
         check = 1;break;
     }
-    if (!check) {printf("Khong tim thay sinh vien trong mon hoc nay hoac ID khong ton tai\n");refreshcreen(); return 1;}
+    if (!check) {printf("ID does not exist\n");refreshcreen(); return 1;}
     fclose(file1);
 
     char marks[5][20] = {"Labs","Exercises","Diligence","Mid-term","Final"};
@@ -305,6 +312,7 @@ int Nhapdiem() {
     // tim vi tri can sua diem 
     int pointed = -input2, seekn = 0, limit = 0;
     file1 = fopen(path,"r+");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     fseek(file1,13,SEEK_SET); //bo qua dong 1
     while(fgets(line1, MAX_LINE_LENGTH, file1)) {
         strcpy(line2,line1);
@@ -346,6 +354,7 @@ int Suadiem() {
     printf("Type in ID: ");scanf("%s",ID);
     unsigned short int check = 0;
     file1 = fopen(path,"r");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     fgets(line1, MAX_LINE_LENGTH, file1);
     while (fgets(line1, MAX_LINE_LENGTH, file1) && check == 0) {
         token1 = strtok(line1,",");
@@ -365,6 +374,7 @@ int Suadiem() {
 
     int pointed = -input2, seekn = 0, locate = 0, rep; float a;
     file1 = fopen(path,"r+");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
     fgets(line1, MAX_LINE_LENGTH, file1); // bo qua dong 1
     while(fgets(line1, MAX_LINE_LENGTH, file1)) { // tim sinh vien trong danh sach
         strcpy(line2,line1);
@@ -397,7 +407,7 @@ char *grading(float n) { // chuyen diem he 10 sang diem chu
     return grade[(int) ((n - 4)/1.5 + 0.01)];
 }
 
-void Sapxep() {
+int Sapxep() {
     char line[MAX_LINE_LENGTH],*token1,*token2,*pend,cal[11];
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
     float x,s,mul[4];
@@ -407,6 +417,7 @@ void Sapxep() {
         strcat(path,".txt");
         FILE *file;
         file = fopen(path, "r+");
+        if (file == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         fgets(cal,12,file); // lay du lieu dong 1
         token1 = strtok(cal,",");
         for (int i = 0; i < 4; i++) {
