@@ -8,7 +8,7 @@
 #define MAX_NUMBER_OF_STUDENTS 60
 
 void menu() {
-    printf("1-Nhap diem. \n2-Xem diem. \n3-Sua diem. \n4-Sap xep. \n5-In ra danh sach. \n6-Chinh sua he so diem mon hoc. \n7-Thoat.\nSelect option: ");
+    printf("-------------------------------------------------------------------------\nPBL1 | NHOM 2 | DE TAI 704 | UNG DUNG QUAN LY DIEM SINH VIEN THEO MON HOC\nGIANG VIEN HUONG DAN: Th.S NGUYEN CONG DANH\nNGUOI THUC HIEN: TRAN QUANG HOANG, LE ANH HAO\n-------------------------------------------------------------------------\nMENU\n-------------------------------------------------------------\n1-Nhap diem. \n2-Xem diem. \n3-Sua diem. \n4-Sap xep. \n5-In ra danh sach. \n6-Chinh sua cong thuc diem. \n7-Thoat.\n-------------------------------------------------------------\nNhung cot diem khong su dung xin vui long chinh he so thanh 0\nCo the chinh bang cach chon muc 6\nMac dinh se dat he so: 10, 10, 10, 20, 50\n-------------------------------------------------------------\nSelect option: ");
 }
 
 void clrscr() { //clear man hinh
@@ -125,7 +125,7 @@ int Indanhsach(short int z) {
         char line2[MAX_LINE_LENGTH], *token2;
         file1 = fopen(path, "r");
         if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
-        fseek(file1,13,SEEK_SET); // bo qua dong 1
+        fseek(file1,16,SEEK_SET); // bo qua dong 1
         file2 = fopen("testdata\\DSSV.txt", "r");
         if (file2 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
         char *str[MAX_NUMBER_OF_STUDENTS]; unsigned short int i = 0;
@@ -137,7 +137,7 @@ int Indanhsach(short int z) {
         }
         int k = i;i--;
         char *c, line1copy[MAX_LINE_LENGTH];
-        printf("ID  Name                          Labs                         Exercises                    Diligence     Mid-term      Final         Average\n");
+        printf("ID  Name                          Labs          Exercises     Diligence     Mid-term      Final         Average\n");
         while (fgets(line1, MAX_LINE_LENGTH, file1)) {
             unsigned short int check = 0;
             strcpy(line1copy,line1); // tao copy de tranh huy hoai du lieu cua line1 
@@ -197,7 +197,7 @@ int Xemdiem() {
     if (!check) {printf("ID does not exist\n");refreshcreen(); return 1;}
     
     // print thong tin
-    printf("Subjects        Labs                         Exercises                    Diligence    Mid-term     Final        Average\n");
+    printf("Subjects        Labs         Exercises    Diligence    Mid-term     Final        Average\n");
     for (int i = 0; i < 4; i++) {
         char path[] = {"testdata\\\\"};
         strcat(path,subject[i]); // noi strings tao thanh path den file mon hoc
@@ -210,11 +210,7 @@ int Xemdiem() {
             if(strcmp(token,ID)) continue;
             // tim sinh vien trong file cac mon hoc
             printf("%-8s        ",subject[i]);
-            for (int i = 0; i < 2; i++) {
-                token = strtok(NULL,",");
-                printf("%-23s      ",token); // print diem Labs , Exs
-            }
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 token = strtok(NULL,",");
                 printf("%-s        ",token); // print diem Diligence,Mid,Final
             }
@@ -287,9 +283,56 @@ int Nhapdiem() {
     strcat(path,".txt");
     FILE *file1;
     // in ra danh sach va diem cua mon hoc
-    Indanhsach(input1);
+    FILE *file2;
+    file1 = fopen(path, "r");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+    file2 = fopen("testdata\\DSSV.txt", "r");
+    if (file2 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+    char *str[MAX_NUMBER_OF_STUDENTS]; unsigned short int i = 0;
+    fseek(file1,16,SEEK_SET); // bo qua dong 1
+    while(fgets(line1, 43, file1)) { // lay du lieu tu file mon hoc va truyen vao mang str
+        str[i] = malloc(strlen(line1) + 1);
+        strcpy(str[i], line1);
+        i++;
+    }
+    int k = i;i--;
+    char *c, line2copy[MAX_LINE_LENGTH], line1copy[MAX_LINE_LENGTH];
+    printf("ID  Name                          Labs          Exercises     Diligence     Mid-term      Final\n");
+    while (fgets(line2, MAX_LINE_LENGTH, file2)) {
+        line2[33] = '\0'; 
+        unsigned short int check = 0;
+        strcpy(line2copy,line2); // tao copy de tranh huy hoai du lieu cua line2 
+        token2 = strtok(line2,",");
+        for (int pos = 0; pos <= i; pos++) { // lay ID tu file mon hoc va compare voi ID trong danh sach sinh vien
+            strcpy(line1,str[pos]); // sau khi compare xong thi chuyen sinh vien vua duoc compare xuong duoi
+            strcpy(line1copy,line1);
+            token1 = strtok(line1,","); // va chuyen sinh vien truoc sinh vien duoc chuyen len tren
+            if (strcmp(token1,token2)) continue;
+            c = str[pos];
+            str[pos] = str[i];
+            str[i] = c;
+            i--;
+            check = 1;
+            break;
+        }
+        if (!check) continue;
+        token2 = strtok(line2copy,",");
+        printf("%s  ",token2); // print ID
+        token2 = strtok(NULL,",");
+        printf("%-30s",token2); // print Name
+        token1 = strtok(line1copy,",");
+        token1 = strtok(NULL,","); // bo qua ID
+        for (int i = 0; i < 5; i++) {
+            printf("%-8s      ",token1);
+            token1 = strtok(NULL,",");
+        } printf("\n\n");
+    }
+    for (int i = 0; i < k; i++) {
+        free(str[i]);
+    }
     // check ID sinh vien co ton tai ko
     char ID[9]; unsigned short int check = 0;
+    printf("-----------------------------------------------------------------------\nCo the nhap nhieu lan trong 1 cot diem\nNhung chi gia tri cuoi moi duoc ghi vao data\nNhap 6 de thoat vong lap\n-----------------------------------------------------------------------\n");
     printf("Type in ID: ");scanf("%s",ID);
     file1 = fopen(path, "r");
     if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
@@ -301,35 +344,34 @@ int Nhapdiem() {
     if (!check) {printf("ID does not exist\n");refreshcreen(); return 1;}
     fclose(file1);
 
+    int input2, stop = 0;
     char marks[5][20] = {"Labs","Exercises","Diligence","Mid-term","Final"};
     for (int i = 1; i < 6; i++) {
         printf("%d.%s   ",i,marks[i-1]); // print cac lua chon mon hoc
+    } printf("6.close");
+    while (!stop) {
+        printf("\nSelect scores section or close: "); input2 = InOptions(6);
+        if (input2 == 6) {fclose(file1);refreshcreen();return 1;}
+        // tim vi tri can sua diem 
+        int pointed = -input2, seekn = 0, limit = 0;
+        file1 = fopen(path,"r+");
+        if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+        fseek(file1,16,SEEK_SET); //bo qua dong 1
+        while(fgets(line1, MAX_LINE_LENGTH, file1)) {
+            strcpy(line2,line1);
+            token1 = strtok(line1,",");
+            if (strcmp(token1,ID)) {seekn += 43;continue;}
+            for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
+            for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) limit++; // xem thu cot diem do da nhap het hay chua
+            break;
+        }
+        if (limit == 1) {printf("Reached limited number of scores | Change scores in Sua diem\n");continue;}
+        float a;
+        printf("Type score you want to add in %s: ",marks[input2-1]);scanf("%f",&a);a = InScore(a); // lay diem nhap vao
+        fseek(file1,seekn + 16,SEEK_SET); // dua con tro SEEK den vi tri can nhap diem
+        fputs(NumberAlike(a),file1);
+        fclose(file1);
     }
-
-    int input2;
-    printf("\nSelect scores section: "); input2 = InOptions(5);
-
-    // tim vi tri can sua diem 
-    int pointed = -input2, seekn = 0, limit = 0;
-    file1 = fopen(path,"r+");
-    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
-    fseek(file1,13,SEEK_SET); //bo qua dong 1
-    while(fgets(line1, MAX_LINE_LENGTH, file1)) {
-        strcpy(line2,line1);
-        token1 = strtok(line1,",");
-        if (strcmp(token1,ID)) {seekn += 79;continue;}
-        for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
-        for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) limit++; // xem thu cot diem do da nhap het hay chua
-        if ((limit == 4 && input2 < 3) || (limit == 1 && input2 >= 3))
-        {printf("Reached limited number of scores | Change scores in Sua diem\n");refreshcreen();return 0;}
-        break;
-    }
-    float a;
-    printf("Type score you want to add in %s: ",marks[input2-1]);scanf("%f",&a);a = InScore(a); // lay diem nhap vao
-    fseek(file1,seekn + 13 + limit*6,SEEK_SET); // dua con tro SEEK den vi tri can nhap diem
-    fputs(NumberAlike(a),file1);
-    printf("Nhap diem thanh cong\n");
-    fclose(file1);
     refreshcreen();
 }
 
@@ -348,7 +390,53 @@ int Suadiem() {
     strcat(path,".txt");
     FILE *file1;
     // in ra man hinh bang diem mon hoc
-    Indanhsach(input1);
+    FILE *file2;
+    file1 = fopen(path, "r");
+    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+    file2 = fopen("testdata\\DSSV.txt", "r");
+    if (file2 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+    char *str[MAX_NUMBER_OF_STUDENTS]; unsigned short int i = 0;
+    fseek(file1,16,SEEK_SET); // bo qua dong 1
+    while(fgets(line1, 43, file1)) { // lay du lieu tu file mon hoc va truyen vao mang str
+        str[i] = malloc(strlen(line1) + 1);
+        strcpy(str[i], line1);
+        i++;
+    }
+    int k = i;i--;
+    char *c, line2copy[MAX_LINE_LENGTH], line1copy[MAX_LINE_LENGTH];
+    printf("ID  Name                          Labs          Exercises     Diligence     Mid-term      Final\n");
+    while (fgets(line2, MAX_LINE_LENGTH, file2)) {
+        line2[33] = '\0'; 
+        unsigned short int check = 0;
+        strcpy(line2copy,line2); // tao copy de tranh huy hoai du lieu cua line2 
+        token2 = strtok(line2,",");
+        for (int pos = 0; pos <= i; pos++) { // lay ID tu file mon hoc va compare voi ID trong danh sach sinh vien
+            strcpy(line1,str[pos]); // sau khi compare xong thi chuyen sinh vien vua duoc compare xuong duoi
+            strcpy(line1copy,line1);
+            token1 = strtok(line1,","); // va chuyen sinh vien truoc sinh vien duoc chuyen len tren
+            if (strcmp(token1,token2)) continue;
+            c = str[pos];
+            str[pos] = str[i];
+            str[i] = c;
+            i--;
+            check = 1;
+            break;
+        }
+        if (!check) continue;
+        token2 = strtok(line2copy,",");
+        printf("%s  ",token2); // print ID
+        token2 = strtok(NULL,",");
+        printf("%-30s",token2); // print Name
+        token1 = strtok(line1copy,",");
+        token1 = strtok(NULL,","); // bo qua ID
+        for (int i = 0; i < 5; i++) {
+            printf("%-8s      ",token1);
+            token1 = strtok(NULL,",");
+        } printf("\n\n");
+    }
+    for (int i = 0; i < k; i++) {
+        free(str[i]);
+    }
     // check ID sinh vien co ton tai hay ko
     char ID[9];
     printf("Type in ID: ");scanf("%s",ID);
@@ -367,50 +455,43 @@ int Suadiem() {
     char marks[5][20] = {"Labs","Exercises","Diligence","Mid-term","Final"};
     for (int i = 1; i < 6; i++) {
         printf("%d.%s   ",i,marks[i-1]); // in ra cac lua chon mon hoc
-    }
+    } printf("6.close");
 
-    unsigned short int input2;
-    printf("\nSelect scores section: "); input2 = InOptions(5); // lay cot diem can sua
-
-    int pointed = -input2, seekn = 0, locate = 0, rep; float a;
-    file1 = fopen(path,"r+");
-    if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
-    fgets(line1, MAX_LINE_LENGTH, file1); // bo qua dong 1
-    while(fgets(line1, MAX_LINE_LENGTH, file1)) { // tim sinh vien trong danh sach
-        strcpy(line2,line1);
-        token1 = strtok(line1,",");
-        if (strcmp(token1,ID)) {seekn += 79; continue;} // lay vi tri can sua string
-        for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
-        break;
-    }
-    for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) locate++; // coi co bao nhieu diem trong cot
-    if (locate == 0) {printf("There're no scores to change | Add score in Nhap diem\n");refreshcreen();return 0;}
-    if (input2 < 3) { // Labs,Exercises can lua chon diem can sua
-        token1 = strtok(token1," ");
-        printf("1. %s   ",token1); // in ra cac diem
-        for (int i = 1; i < locate; i++) {
-            token1 = strtok(NULL," ");
-            printf("%d. %s      ",i+1,token1);
+    unsigned short int input2, stop = 0;
+    while (!stop) {
+        printf("\nSelect scores section or close: "); input2 = InOptions(6); // lay cot diem can sua
+        if (input2 == 6) {fclose(file1);refreshcreen();return 1;}
+        int pointed = -input2, seekn = 0, locate = 0, rep; float a;
+        file1 = fopen(path,"r+");
+        if (file1 == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
+        fgets(line1, MAX_LINE_LENGTH, file1); // bo qua dong 1
+        while(fgets(line1, MAX_LINE_LENGTH, file1)) { // tim sinh vien trong danh sach
+            strcpy(line2,line1);
+            token1 = strtok(line1,",");
+            if (strcmp(token1,ID)) {seekn += 43; continue;} // lay vi tri can sua string
+            for (int i = 0; i < input2; i++) {seekn += strlen(token1)+1;token1 = strtok(NULL,",");};
+            break;
         }
-        printf("\nSelect score you want to change: "); rep = InOptions(locate); // lay diem thay the
-    } else rep = 1; // Diligence,Midterm,Final ko can in nhieu lua chon
-    printf("Replace score with: ");scanf("%f",&a);a = InScore(a); // lay diem thay the
-    fseek(file1,seekn + 13 + (rep-1)*6,SEEK_SET); // dua con tro SEEK den vi tri can sua
-    fputs(NumberAlike(a),file1); // dua du lieu can sua vao
-    fclose(file1);
+        for (int i = 0; i < strlen(token1); i++) if ((int)token1[i] == 46) locate++; // coi co bao nhieu diem trong cot
+        if (locate == 0) {printf("There're no scores to change | Add score in Nhap diem\n");continue;}
+        printf("Replace %s with: ",token1);scanf("%f",&a);a = InScore(a); // lay diem thay the
+        fseek(file1,seekn + 16,SEEK_SET); // dua con tro SEEK den vi tri can sua
+        fputs(NumberAlike(a),file1); // dua du lieu can sua vao
+        fclose(file1);
+    }
     refreshcreen(); 
 }
 
 char *grading(float n) { // chuyen diem he 10 sang diem chu
     if (n < 4) return "(F)";
-    char *grade[4] = {"(D)","(C)","(B)","(A)"};
+    char *grade[5] = {"(D)","(C)","(B)","(A)","(A)"};
     return grade[(int) ((n - 4)/1.5 + 0.01)];
 }
 
 int Sapxep() {
-    char line[MAX_LINE_LENGTH],*token1,*token2,*pend,cal[11];
+    char line[MAX_LINE_LENGTH],*token1,*token2,*pend,cal[15];
     char subject[4][10] = {"Anh","DSTT","Toan","Triet"};
-    float x,s,mul[4];
+    float x,s,mul[5];
     for (int i = 0; i < 4; i++) {
         char path[] = {"testdata\\\\"};
         strcat(path,subject[i]); // noi strings tao path
@@ -418,19 +499,19 @@ int Sapxep() {
         FILE *file;
         file = fopen(path, "r+");
         if (file == NULL) {printf("Failed to open file | File does not exist\n");refreshcreen(); return 0;}
-        fgets(cal,12,file); // lay du lieu dong 1
+        fgets(cal,15,file); // lay du lieu dong 1
         token1 = strtok(cal,",");
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             x = strtof(token1,&pend); // chuyen string thanh float
             mul[i] = x;
             token1 = strtok(NULL,","); // cac float vua duoc them vao mang "mul" la cac he so tinh diem
         }
-        fseek(file,13,SEEK_SET);
+        fseek(file,16,SEEK_SET);
         char *str1[MAX_NUMBER_OF_STUDENTS][6]; // mang chua du lieu cua sinh vien
         float sor[MAX_NUMBER_OF_STUDENTS][2]; // mang dung de sort theo diem cao -> thap
         int i = 0,j;
         while(fgets(line, MAX_LINE_LENGTH, file)) {
-            line[68] = '\0';
+            line[32] = '\0';
             token1 = strtok(line,",");
             str1[i][0] = malloc(strlen(token1) + 1); // lay du lieu truyen vao mang str1
             strcpy(str1[i][0], token1);
@@ -441,34 +522,26 @@ int Sapxep() {
             }
             i++;
         } int k = i;
-        int count;
-        char str1cpy[23]; //optimizeable ?  5 cot diem thi string du lieu lay ra co chieu dai max la 23 
+        char str1cpy[5]; //optimizeable ?  5 cot diem thi string du lieu lay ra co chieu dai max la 23 
         for(int f = 0; f < k; f++) { // khong biet co the toi uu ko vi chiem qua nhieu du lieu
-            count = 0; s = 0; // khong bik dung pointer co duoc ko (da thu)
-            for (int p = 1; p < 3; p++) {
-                strcpy(str1cpy,str1[f][p]); // copy string vi strtok pha du lieu cua string truyen vao
-                token2 = strtok(str1cpy," ");
-                while (token2 != NULL) {
-                    count++;
-                    x = strtof(token2,&pend); // chuyen string thanh float
-                    s += x; // cac diem tu cot Labs va Exercises se tinh theo he so dau tien trong mul
-                    token2 = strtok(NULL," "); // s = Labs + Exs
-                }
-            }
-            s/=count;
+            s = 0;
+            x = strtof(str1[f][1],&pend);
+            s += x*mul[0]; // s += Diligence
+            x = strtof(str1[f][2],&pend);
+            s += x*mul[1]; // s += Diligence
             x = strtof(str1[f][3],&pend);
-            s = s*mul[0]+x*mul[1]; // s += Diligence
+            s += x*mul[2]; // s += Diligence
             x = strtof(str1[f][4],&pend);
-            s += x*mul[2]; // s += Midterm
+            s += x*mul[3]; // s += Midterm
             x = strtof(str1[f][5],&pend);
-            s += x*mul[3]; s/=100; // s += Final
+            s += x*mul[4]; s/=100; // s += Final
             sor[f][0] = f;
             sor[f][1] = s; // chuyen du lieu vao mang sor de sort
         }
         quickSort(sor,0,k-1);
-        fseek(file,13,SEEK_SET); // chuyen vi tri con tro seek den dong 2
+        fseek(file,16,SEEK_SET); // chuyen vi tri con tro seek den dong 2
         for (int l = 0; l < k; l++) { // tao thanh string hoan chinh cua sinh vien (ID,Labs,Exs,Diligence,Midterm,Final,Average)
-            char out[76] = "";
+            char out[45] = "";
             for(int f = 0; f < 6; f++) {strcat(out,str1[(int) sor[l][0]][f]);strcat(out,",");}
             strcat(out,NumberAlike(sor[l][1]));
             strcat(out,grading(sor[l][1])); // optimizable ?
