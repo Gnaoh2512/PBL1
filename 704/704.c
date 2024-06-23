@@ -116,7 +116,7 @@ int Indanhsach(short int z) {
     clrscr();
     if (i == 1)
     { // in danh sach sinh vien
-        file1 = fopen("testdata\\DSSV.txt", "r");
+        file1 = fopen("testdata2\\DSSV.txt", "r");
         if (file1 == NULL)
         {
             printf("Failed to open file | File does not exist\n");
@@ -151,7 +151,7 @@ int Indanhsach(short int z) {
         else
             i = z;
         clrscr();
-        char path[] = {"testdata\\\\"};
+        char path[] = {"testdata2\\\\"};
         strcat(path, subject[i - 1]); // noi strings tao thanh path toi file mon hoc
         strcat(path, ".txt");
         FILE *file2;
@@ -164,7 +164,7 @@ int Indanhsach(short int z) {
             return 0;
         }
         fseek(file1, 16, SEEK_SET); // bo qua dong 1
-        file2 = fopen("testdata\\DSSV.txt", "r");
+        file2 = fopen("testdata2\\DSSV.txt", "r");
         if (file2 == NULL)
         {
             printf("Failed to open file | File does not exist\n");
@@ -239,7 +239,7 @@ int Xemdiem() {
     clrscr();
 
     // check DSSV co ID ko
-    file = fopen("testdata\\DSSV.txt", "r");
+    file = fopen("testdata2\\DSSV.txt", "r");
     if (file == NULL)
     {
         printf("Failed to open file | File does not exist\n");
@@ -270,7 +270,7 @@ int Xemdiem() {
     printf("Subjects        Lab         Exercise    Diligence     Mid-term      Final        Average\n");
     for (int i = 0; i < 4; i++)
     {
-        char path[] = {"testdata\\\\"};
+        char path[] = {"testdata2\\\\"};
         strcat(path, subject[i]); // noi strings tao thanh path den file mon hoc
         strcat(path, ".txt");
         file = fopen(path, "r");
@@ -331,7 +331,7 @@ int ChinhHeSo() {
     printf("Select subject: ");
     input = InOptions(4);
     FILE *file;
-    char path[] = "testdata\\\\";
+    char path[] = "testdata2\\\\";
     strcat(path, subject[input - 1]); // noi strings tao thanh path den file mon hoc
     strcat(path, ".txt");
     file = fopen(path, "r+");
@@ -389,7 +389,7 @@ int Nhapdiem() {
     printf("\nSelect subject: ");
     input1 = InOptions(4);
     clrscr();
-    char path[] = {"testdata\\\\"};
+    char path[] = {"testdata2\\\\"};
     strcat(path, subject[input1 - 1]); // noi strings tao thanh path toi file mon hoc
     strcat(path, ".txt");
     FILE *file1;
@@ -402,7 +402,7 @@ int Nhapdiem() {
         refreshcreen();
         return 0;
     }
-    file2 = fopen("testdata\\DSSV.txt", "r");
+    file2 = fopen("testdata2\\DSSV.txt", "r");
     if (file2 == NULL)
     {
         printf("Failed to open file | File does not exist\n");
@@ -564,7 +564,7 @@ int Suadiem() {
     printf("\nSelect subject: ");
     input1 = InOptions(4);
     clrscr();
-    char path[] = {"testdata\\\\"};
+    char path[] = {"testdata2\\\\"};
     strcat(path, subject[input1 - 1]); // noi strings tao path den mon hoc
     strcat(path, ".txt");
     FILE *file1;
@@ -577,7 +577,7 @@ int Suadiem() {
         refreshcreen();
         return 0;
     }
-    file2 = fopen("testdata\\DSSV.txt", "r");
+    file2 = fopen("testdata2\\DSSV.txt", "r");
     if (file2 == NULL)
     {
         printf("Failed to open file | File does not exist\n");
@@ -637,6 +637,7 @@ int Suadiem() {
         free(str[i]);
     }
     // check ID sinh vien co ton tai hay ko
+    printf("-----------------------------------------------------------------------\nCo the sua nhieu lan cho 1 sinh vien\nCot diem trong khong the sua diem\nNhap diem o menu\nNhap 6 de thoat vong lap sau khi nhap ID\n-----------------------------------------------------------------------\n");
     char ID[9];
     printf("Type in ID: ");
     scanf("%s", ID);
@@ -740,7 +741,7 @@ int Sapxep() {
     float x, s, mul[5];
     for (int i = 0; i < 4; i++)
     {
-        char path[] = {"testdata\\\\"};
+        char path[] = {"testdata2\\\\"};
         strcat(path, subject[i]); // noi strings tao path
         strcat(path, ".txt");
         FILE *file;
